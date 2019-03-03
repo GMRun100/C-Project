@@ -14,8 +14,8 @@
 #endif
 
 //#pragma comment(lib,"D:/C++Project/C++study/Debug/do_utils_debug.lib")
-//#pragma comment(lib,"../Debug/do_utils_debug.lib")
-#pragma comment(lib,"do_utils_debug.lib")
+#pragma comment(lib,"../Debug/do_utils_debug.lib")
+//#pragma comment(lib,"do_utils_debug.lib")
 //#define   LIBPATH(p,f)   p##f 
 //#pragma   comment(lib,LIBPATH(__FILE__,"../../do_utils_debug.lib")) 
 
