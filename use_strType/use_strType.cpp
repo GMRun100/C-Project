@@ -32,6 +32,26 @@ int main()
 	m_pint = &n;
 	std::cout << "m_pint =" << *m_pint << "\n";
 
+	//LPSTR:长指针字符串，L代表长，P代表指针，STR表示字符串
+	//我们通过查找官方的定义：typedef _Null_terminated_ CHAR *NPSTR, *LPSTR, *PSTR; 
+	//通过官方的定义可以LPSTR为以NULL为终止的字符串指针
+	LPSTR m_LPSTR;
+	int len_LPSTR;
+	len_LPSTR = sizeof(m_LPSTR);  //在x86平台下，指针长度为4个字节，在x64平台下，指针长度为8个字节
+	m_LPSTR = greeting;
+	std::cout << "m_LPSTR =" << *m_LPSTR << "\n";   //此处m_LPSTR指向字符串的首地址，所以只打印H
+
+	//LPSTR 转化为string 
+	//CString str(m_LPSTR);
+	
+	//PSTR:窄指针字符串
+	PSTR m_PSTR;
+	int len_PSTR;
+	len_PSTR = sizeof(m_PSTR);	//在x86平台下，指针长度为4个字节，在x64平台下，指针长度为8个字节，没感觉出跟LPSTR有啥区别
+	m_PSTR = greeting2;
+	std::cout << "m_PSTR =" << *m_PSTR << "\n";
+
+
 
 
 	
