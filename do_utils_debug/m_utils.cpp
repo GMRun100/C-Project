@@ -32,7 +32,6 @@ LIBUTILS_API CString hello()
 	InitConsoleWindow();  // add
 	_cwprintf_s(_T("haha\n"));    //向控制台中输出一些打印信息
 	_cwprintf_s(_T("str = %s\n "), _T("Debug output goes to terminal\n"));
-	LPSTR m_lpstr;
 	//printf("str = %s\n ", "Debug output goes to terminal\n");
 	//char ch = getchar();                // 读数据
 	//freeConsoleWindow();   //程序执行完毕需要释放console窗口

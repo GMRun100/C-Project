@@ -11,6 +11,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "do_importDLL", "do_importDL
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "use_strType", "use_strType\use_strType.vcxproj", "{B4DCEF2F-B4F8-4686-B08A-610AD3D3155C}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mfc_use_strType", "mfc_use_strType\mfc_use_strType.vcxproj", "{B3F05DAC-7768-4712-A0EA-3251E43E48ED}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -69,6 +71,18 @@ Global
 		{B4DCEF2F-B4F8-4686-B08A-610AD3D3155C}.Release|x64.Build.0 = Release|x64
 		{B4DCEF2F-B4F8-4686-B08A-610AD3D3155C}.Release|x86.ActiveCfg = Release|Win32
 		{B4DCEF2F-B4F8-4686-B08A-610AD3D3155C}.Release|x86.Build.0 = Release|Win32
+		{B3F05DAC-7768-4712-A0EA-3251E43E48ED}.Debug|Win32.ActiveCfg = Debug|Win32
+		{B3F05DAC-7768-4712-A0EA-3251E43E48ED}.Debug|Win32.Build.0 = Debug|Win32
+		{B3F05DAC-7768-4712-A0EA-3251E43E48ED}.Debug|x64.ActiveCfg = Debug|x64
+		{B3F05DAC-7768-4712-A0EA-3251E43E48ED}.Debug|x64.Build.0 = Debug|x64
+		{B3F05DAC-7768-4712-A0EA-3251E43E48ED}.Debug|x86.ActiveCfg = Debug|Win32
+		{B3F05DAC-7768-4712-A0EA-3251E43E48ED}.Debug|x86.Build.0 = Debug|Win32
+		{B3F05DAC-7768-4712-A0EA-3251E43E48ED}.Release|Win32.ActiveCfg = Release|Win32
+		{B3F05DAC-7768-4712-A0EA-3251E43E48ED}.Release|Win32.Build.0 = Release|Win32
+		{B3F05DAC-7768-4712-A0EA-3251E43E48ED}.Release|x64.ActiveCfg = Release|x64
+		{B3F05DAC-7768-4712-A0EA-3251E43E48ED}.Release|x64.Build.0 = Release|x64
+		{B3F05DAC-7768-4712-A0EA-3251E43E48ED}.Release|x86.ActiveCfg = Release|Win32
+		{B3F05DAC-7768-4712-A0EA-3251E43E48ED}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
