@@ -171,7 +171,7 @@ void CmfcusestrTypeDlg::practice_using_str()
 	use_char();
 	use_lpstr();
 	use_cstr();
-
+	use_str();
 	
 
 }
@@ -315,6 +315,7 @@ void CmfcusestrTypeDlg::use_lpstr()
 
 }
 
+//CString 转化为
 void CmfcusestrTypeDlg::use_cstr()
 {
 	CString str("Hello");    //在VS2017中CString类型为宽字符型
@@ -323,17 +324,103 @@ void CmfcusestrTypeDlg::use_cstr()
 	//CString 转化为LPSTR
 	LPSTR m_str_LPSTR;
 	//LPCWSTR:宽字符串指针
-	m_str_LPSTR = (LPSTR)(LPCWSTR)str;
+	m_str_LPSTR = (LPSTR)(LPCWSTR)str;   //
 	char temp;
 	m_str_LPSTR++;
 	m_str_LPSTR++;
 	temp = *m_str_LPSTR;    //因为m_str_LPSTR是一个窄字符串指针，所以一次只能移动一个字节，而CString一个字符占两个字节，所以需要移动两次
+	//CString转为LPCWSTR
 	//下面试一下宽字符串指针
 	LPCWSTR m_str_LPWSTR;    //
 	m_str_LPWSTR = (LPCWSTR)str;
 	m_str_LPWSTR++;
 	//*m_str_LPWSTR = s;
 	temp = *m_str_LPWSTR;   //宽字符串指针只需要移动一次即可
+
+	//CString转为string
+	string m_str;
+	m_str = (LPCSTR)(CStringA)(str);    //string是标准C++扩充字符串操作的一个类，而CString是MFC操作字符串的一个类
+
+	//CString 转为LPSTR
+	LPCSTR m_lpcstr;
+	m_lpcstr= (LPCSTR)(LPCWSTR)str;
+
+	//CString 转为char*
+	//方法一
+	char* m_pc;
+	m_pc =(LPSTR) str.GetBuffer();   //getbuffer函数默认返回的是LPCWSTR型指针,需要对指针进行强制类型转换
+	m_pc++;
+	m_pc++;
+	temp = *m_pc;   
+
+	//方法二
+	char* m_pc2;
+	m_pc2 = (LPSTR)(LPCWSTR)str;   //LPSTR就是char*型指针
+
+	//CString 转为WCHAR*
+	WCHAR* m_pwc;
+	m_pwc =(LPWSTR)(LPCWSTR)str;
+
+	//突然突发奇想的想将指针转为int*
+	int* m_pint;
+	int len_int;
+	len_int = sizeof(int);  //sizeof操作符以字节形式给出了其操作数的存储大小，int型数据占四个字节
+	m_pint = (int*)(LPCWSTR)str; //m_pint的值为 = 0x00650048  正好是str所表示的字符的ascii码值
+
+}
+//string 转为其他类型
+void CmfcusestrTypeDlg::use_str()
+{
+	string str = "Hello";
+
+	//string转为char *
+	char* m_cr;
+	//c_str()函数返回的是一个const char *char型的指针
+	m_cr = (char *)str.c_str();  //此处我们需要将返回的指针类型强制转换一下
+
+	//string 转为const char * 
+	//下面这条语句可以从又向左理解，理解为m_ccr is a point to char const  m_ccr是一个指向字符型常量的指针。*可以被换成point to。
+	//常量指针：被指向的对象是常量
+	//指针常量：指针本身是常量
+	//*前面的是对被指向对象的修饰，*后面的是对指针本身的修饰。
+	const char *m_ccr;   
+	m_ccr= str.c_str();
+	m_ccr++;
+	char tmp;
+	tmp = *m_ccr;
+
+	//现在换一种定义方式
+	//m_ccr2是一个指针常量，所以必须要在初始化的时候赋值，由于c_str()返回的是一个字符型常量指针，所以需要将指针类型强制转换一下
+	string str2 = "World";
+	char* const m_ccr2=(char *)str2.c_str(); 
+	*m_ccr2 = 's';   
+
+	//如果我们希望这个指针啥都别动呢？
+	//可以定义如下：
+	string str3 = "Hello World!";
+	const char* const m_ccr3=str3.c_str();   //m_ccr3是一个指向字符常量的指针常量。
+
+	//string 转为CString
+	//方法一,利用构造函数直接赋值
+	CString m_cstr(str.c_str());
+
+	//方法二
+	CString m_cstr2;
+	m_cstr2=str.c_str();
+
+	//string转LPCSTR
+	LPCSTR m_lpcstr;
+	m_lpcstr= str.c_str();  //c_str()函数返回的就是LPCSTR类型
+
+	//string转LPWSTR
+	//char * 转LPWSTR的方式与此类似
+	LPWSTR m_lpwstr;
+	size_t origsize = str.length() + 1;
+	size_t convertedChars = 0;
+	m_lpwstr = (LPWSTR)malloc(sizeof(WCHAR)*origsize);
+	//mbstowcs_s()函数是C++中的标准库函数，用于将多字节编码字符串转换为宽字符编码字符串，即将char*转换成wchar_t*
+	mbstowcs_s(&convertedChars, m_lpwstr, origsize, str.c_str(), _TRUNCATE);
+	free(m_lpwstr);   //申请完内存一定要注意释放
 
 }
 
