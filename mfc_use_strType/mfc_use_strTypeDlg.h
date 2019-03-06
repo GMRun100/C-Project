@@ -15,6 +15,7 @@ public:
 	void use_char();
 	void use_lpstr();
 	void use_cstr();
+	void use_str();
 // 对话框数据
 #ifdef AFX_DESIGN_TIME
 	enum { IDD = IDD_MFC_USE_STRTYPE_DIALOG };
