@@ -263,12 +263,18 @@ void CmfcusestrTypeDlg::use_lpstr()
 	LPSTR m_LPSTR;
 	int len_LPSTR;
 	len_LPSTR = sizeof(m_LPSTR);  //在x86平台下，指针长度为4个字节，在x64平台下，指针长度为8个字节
-	m_LPSTR = greeting;
+
+	//LPSTR转为char*
+	m_LPSTR = greeting;  
 	std::cout << "m_LPSTR =" << *m_LPSTR << "\n";   //此处m_LPSTR指向字符串的首地址，所以只打印H
 
 	//LPSTR 转化为cstring 
+	//方法一，利用构造函数
 	CString str(m_LPSTR);    //在VS2017中CString类型为宽字符型
 	CString str2("WORLD");
+	//利用操作符重载
+	CString str3;
+	str3 = m_LPSTR;
 
 	//LPSTR转换成LPCSTR
 	//LPSTR m_LPSTR2 = "Test";
