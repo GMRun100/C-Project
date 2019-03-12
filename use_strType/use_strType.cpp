@@ -8,6 +8,69 @@
 #include<io.h>
 #include<wtypes.h>
 typedef int *pint;    //此处相当于定义了一个int型的指针类型
+
+//利用结构体实现链表的功能
+struct node
+{
+	//链表中的节点
+	int data;  //数据
+	int num;
+	struct node *next;
+};
+
+//利用结构体，实现一个不断增长的数据链表
+//用户一直输入数据，直到用户输入数据0停止
+void struct_link()
+{
+	node *head;//头结点
+	node *p, *q;
+	//指针初始化
+	head = NULL;
+	p = NULL;
+	q = new node;
+	q->num = 1;
+	int a = -1;
+	std::cout << "请输入第一个数字";
+	std::cin >> a;
+	q->data = a;
+	head = q;
+	while (a != 0)
+	{
+		p = q;
+		q = new node;  //指针继续申请新的节点
+		q->next = NULL;
+		p->next = q;
+		q->num = p->num + 1;
+		std::cout << "请输入第" << q->num << "个数字";
+		std::cin >> a;
+		q->data = a;
+	}
+
+	//输出用户的输入
+	q = head;
+	p = NULL;
+	while (q->data!=0)
+	{
+		printf("%d %d\n", q->num, q->data);
+		q = q->next;
+	}
+
+
+	//释放内存
+	q = head;
+	p = q;
+	while (q->next!=NULL)
+	{
+		p = q->next;
+		delete [] q;
+		q = p;
+	}
+
+
+
+}
+
+
 int main()
 {
     //std::cout << "Hello World!\n"; 
@@ -52,11 +115,15 @@ int main()
 	std::cout << "m_PSTR =" << *m_PSTR << "\n";
 
 
-
+	//利用动态内存，实现一个数组的增长
+	struct_link();
 
 	
-
+	return 0;
 }
+
+
+
 
 // 运行程序: Ctrl + F5 或调试 >“开始执行(不调试)”菜单
 // 调试程序: F5 或调试 >“开始调试”菜单

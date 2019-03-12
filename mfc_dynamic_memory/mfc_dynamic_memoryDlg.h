@@ -11,6 +11,7 @@ class CmfcdynamicmemoryDlg : public CDialogEx
 // 构造
 public:
 	CmfcdynamicmemoryDlg(CWnd* pParent = nullptr);	// 标准构造函数
+	void struct_link();
 
 // 对话框数据
 #ifdef AFX_DESIGN_TIME
