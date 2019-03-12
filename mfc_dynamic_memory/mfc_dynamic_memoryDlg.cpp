@@ -6,10 +6,13 @@
 #include "mfc_dynamic_memory.h"
 #include "mfc_dynamic_memoryDlg.h"
 #include "afxdialogex.h"
+#include "Test.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
+
+
 
 
 // 用于应用程序“关于”菜单项的 CAboutDlg 对话框
@@ -153,8 +156,31 @@ BOOL CmfcdynamicmemoryDlg::OnInitDialog()
 	delete[] array;
 
 
+	//用malloc申请内存空间和用new申请内存空间的区别
+	//首先是用malloc申请内存空间
+	//用malloc申请内存空间仅仅是在堆中申请了一片内存空间，并将这片内存空间的类型强制转换为需要的类型
+	//但是并没有真正的新建一个对象，因为并没有调用该对象的构造函数。
+	Test *m_Test = (Test *)malloc(sizeof(Test));
+	m_Test->print();  //输出为垃圾值
+
+	//用new的方式申请内存空间
+	//new的方式：在开辟内存空间的同时，相当于新建一个对象，会调用对象的构造函数
+	Test *n_Test = new Test;
+	n_Test->print();
+
+
+	//利用动态内存实现链表的功能
+
+	
 
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
+}
+
+//利用结构体，实现一个不断增长的数据链表
+//用户一直输入数据，直到用户输入数据0停止
+void CmfcdynamicmemoryDlg::struct_link()
+{
+
 }
 
 void CmfcdynamicmemoryDlg::OnSysCommand(UINT nID, LPARAM lParam)
