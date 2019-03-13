@@ -23,6 +23,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mfc_use_define_typedef", "m
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mfc_dynamic_memory", "mfc_dynamic_memory\mfc_dynamic_memory.vcxproj", "{45F63B11-EBE9-48D3-AFCA-64274E5AB7E1}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mfc_use_STL_containers", "mfc_use_STL_containers\mfc_use_STL_containers.vcxproj", "{9F3F02FC-1B44-4FD2-9239-A6D26525699C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -153,6 +155,18 @@ Global
 		{45F63B11-EBE9-48D3-AFCA-64274E5AB7E1}.Release|x64.Build.0 = Release|x64
 		{45F63B11-EBE9-48D3-AFCA-64274E5AB7E1}.Release|x86.ActiveCfg = Release|Win32
 		{45F63B11-EBE9-48D3-AFCA-64274E5AB7E1}.Release|x86.Build.0 = Release|Win32
+		{9F3F02FC-1B44-4FD2-9239-A6D26525699C}.Debug|Win32.ActiveCfg = Debug|Win32
+		{9F3F02FC-1B44-4FD2-9239-A6D26525699C}.Debug|Win32.Build.0 = Debug|Win32
+		{9F3F02FC-1B44-4FD2-9239-A6D26525699C}.Debug|x64.ActiveCfg = Debug|x64
+		{9F3F02FC-1B44-4FD2-9239-A6D26525699C}.Debug|x64.Build.0 = Debug|x64
+		{9F3F02FC-1B44-4FD2-9239-A6D26525699C}.Debug|x86.ActiveCfg = Debug|Win32
+		{9F3F02FC-1B44-4FD2-9239-A6D26525699C}.Debug|x86.Build.0 = Debug|Win32
+		{9F3F02FC-1B44-4FD2-9239-A6D26525699C}.Release|Win32.ActiveCfg = Release|Win32
+		{9F3F02FC-1B44-4FD2-9239-A6D26525699C}.Release|Win32.Build.0 = Release|Win32
+		{9F3F02FC-1B44-4FD2-9239-A6D26525699C}.Release|x64.ActiveCfg = Release|x64
+		{9F3F02FC-1B44-4FD2-9239-A6D26525699C}.Release|x64.Build.0 = Release|x64
+		{9F3F02FC-1B44-4FD2-9239-A6D26525699C}.Release|x86.ActiveCfg = Release|Win32
+		{9F3F02FC-1B44-4FD2-9239-A6D26525699C}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
