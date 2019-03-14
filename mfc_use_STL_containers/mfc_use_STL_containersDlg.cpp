@@ -7,6 +7,9 @@
 #include "mfc_use_STL_containersDlg.h"
 #include "afxdialogex.h"
 #include <vector>
+#include <array>
+#include <algorithm>
+#include <numeric>
 using namespace std;
 
 #ifdef _DEBUG
@@ -105,6 +108,7 @@ BOOL CmfcuseSTLcontainersDlg::OnInitDialog()
 	// TODO: 在此添加额外的初始化代码
 
 	use_vector();
+	use_array();
 
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
@@ -161,6 +165,7 @@ HCURSOR CmfcuseSTLcontainersDlg::OnQueryDragIcon()
 
 //练习使用STL中的vector
 //STL提供了功能强大的模板类
+//vector属于一种序列式容器：可以在容器末尾高效的增加或删除元素
 void CmfcuseSTLcontainersDlg::use_vector()
 {
 	vector<int> vec;  //vec是vector类的一个对象
@@ -184,13 +189,8 @@ void CmfcuseSTLcontainersDlg::use_vector()
 	vector_size = sizeof(vector<int>);
 	TRACE("vector size:%d\n", vector_size);
 
-
-
-
-
-
 	//使用迭代器访问向量中的值
-	//可以用迭代器来遍历对象集合中的元素
+	//可以用迭代器来遍历对象集合中的元素，属于广义指针
 	vector<int>::iterator v = vec.begin();  //感觉迭代器有点类似于对象集合的指针
 	//while (v!=vec.end())
 	//{
@@ -226,11 +226,14 @@ void CmfcuseSTLcontainersDlg::use_vector()
 
 
 	int tmp;
-
+	//前面我们resize(10)容器大小为10，并reserve(15)更改容器容量为15
+	//更改容器容量之后，并不是说容器真的开辟出了那么大的内存空间，容器内的对象并没有真实的内存空间(空间是"野"的)
 	try
 	{
-		tmp = vec[14];
-		//tmp=vec.at(14);
+		//使用 [] 操作符访问容器内的对象，很可能出现数组越界的问题
+		//tmp = vec[14];   //此时会报vector subscript out of range的错误，会导致程序崩溃
+		//推荐使用at方法访问数组元素，当对象不存在时会抛出异常
+		tmp=vec.at(14);
 	}
 	catch (const std::exception& e)
 	{
@@ -242,4 +245,82 @@ void CmfcuseSTLcontainersDlg::use_vector()
 	//方法一：在创建容器后，第一时间为容器分配足够大的空间，避免重新分配内存：vec.reserve(10000);
 	//方法二：该方法是创建容器时，利用构造函数初始化的出足够的空间，vector<int> vec(10000);
 	//另外一个需要注意的事项：用[]访问，vector 退化为数组，不会进行越界的判断。此时推荐使用 at()，会先进行越界检查。（这一条明天再验证）
+}
+
+//数组容器
+void CmfcuseSTLcontainersDlg::use_array()
+{
+	array<double, 50> data_d{};  //数组元素被初始化为0
+
+	data_d.fill(3.1415926);   //fill函数可以将数组中的所有元素都设定为传入的实参值
+	try
+	{
+		data_d.at(1000) = 1000;    //当索引越界时，会抛出一个std::out_of_rang异常
+	}
+	catch (const std::exception& e)
+	{
+		TRACE("error:%s\n", e.what());
+	}
+
+	size_t size_a;
+	size_a = sizeof(data_d);   //返回长度为8000，一个double类型占8个字节，一共1000个数
+
+	size_t size_d;
+	size_d = data_d.size();
+	TRACE("The size of the array:%d\n", size_d);
+
+	int i;
+	for (i = 0; i < data_d.size();i++)
+	{
+		data_d.at(i) = i;
+	}
+
+	//auto可以根据初始化表达式自动推断该变量的类型
+	//用auto声明的变量必须初始化,否则编译器无法判断变量的类型
+	auto first= data_d.begin();  //first的类型为iterator
+
+	//当然我们也可以直接定义
+	array<double, 50>::iterator first2;
+	first2= data_d.begin();
+
+	//通过对比我们可以发现使用auto声明变量，可以有效的简化代码
+	//另外一种初始化的方法
+	auto end = std::end(data_d);
+
+	//重新对数组元素赋值
+	i = 1;
+	while (first!=end)
+	{
+		*first = i;			//对数组元素进行赋值
+		i = i + 1;
+		first++;			//可以像使用普通指针那样使用迭代器对象
+	}
+
+	//在C++中算法和容器类型是独立的
+	//而使用迭代器,可以指定容器中的一段元素
+	//下面使用iota函数来初始化数组
+	array<int, 10> data_i{};  //{}表示被初始化为0
+	std::iota(std::begin(data_i), std::end(data_i), 1);   //注意包含#include<numeric> 
+
+	//证明算法和容器类型独立
+	array<double, 5> data_d2{};
+	std::iota(std::begin(data_d2), std::end(data_d2), 5.0);   //最后一个参数为累加的初始值，值每次自动加1
+
+
+	//我们也可以使用反向迭代器对某一段数组元素赋初值
+	array<double, 5> data_d3{};
+	std::iota(std::rbegin(data_d3), std::rend(data_d3), 3.0);
+
+	//以上语句等同于如下
+	double tmp_d;
+	tmp_d = 3.0;
+	array<double, 5> data_d4{};
+	auto first_d = data_d4.rbegin();     //迭代器的类型为std::reverse_iterator<std::_Array_iterator<double,5> >
+	for (; first_d != data_d4.rend(); first_d++)
+	{
+		*first_d = tmp_d;
+		tmp_d = tmp_d + 1;
+	}
+
+
 }

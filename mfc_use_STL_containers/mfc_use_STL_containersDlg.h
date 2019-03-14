@@ -12,6 +12,7 @@ class CmfcuseSTLcontainersDlg : public CDialogEx
 public:
 	CmfcuseSTLcontainersDlg(CWnd* pParent = nullptr);	// 标准构造函数
 	void use_vector();
+	void use_array();
 
 // 对话框数据
 #ifdef AFX_DESIGN_TIME
