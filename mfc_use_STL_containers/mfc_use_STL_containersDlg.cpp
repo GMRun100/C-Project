@@ -165,13 +165,36 @@ HCURSOR CmfcuseSTLcontainersDlg::OnQueryDragIcon()
 
 //练习使用STL中的vector
 //STL提供了功能强大的模板类
-//vector属于一种序列式容器：可以在容器末尾高效的增加或删除元素
+//vector属于一种序列式容器：只能在容器末尾高效的增加或删除元素
 void CmfcuseSTLcontainersDlg::use_vector()
 {
 	vector<int> vec;  //vec是vector类的一个对象
 	size_t v_size;
 	v_size = vec.size();     //vector大小为0
 	TRACE("vector size:%d and the vec capacity:%d\n", v_size, vec.capacity());
+
+	//使用初始化列表来初始化向量
+	vector<unsigned int> vec_ui { 2u, 3u, 4u };  //u后缀表示无符号整数
+
+	//可以在初始化的时候在指定元素个数
+	//参数一：元素个数    参数二：所有元素的初始值
+	vector<unsigned int> vec_ui2(20,99u);  
+
+
+	//vector初始化时，也可以直接拷贝其他的vector
+	vector<std::string> vec_s{ "one","two","three","four","five" };
+	vector<std::string> vec_copy {std::rbegin(vec_s),std::rend(vec_s) };   //反向拷贝
+
+	//我们也可以使用移动迭代器
+	//下面将元素从ves_copy移动到vec_copy2
+	//vec_copy的size仍为5，只是都为空字符串，因为元素已经被移动到vec_copy2中
+	vector<std::string> vec_copy2{ std::make_move_iterator(vec_copy.begin()),std::make_move_iterator(vec_copy.end()) };  
+
+
+	vec_ui.front()=20;    //front()函数返回vector第一个元素的引用，所以我们可以直接对第一个元素进行赋值
+	vec_ui.back() = 50;   //back()函数返回vector最后一个元素的引用，我们也可以直接进行赋值
+	auto p_vec_ui = vec_ui.data();   //data()返回一个指向数组的指针，本例中返回unsigned int*类型
+
 	int i;
 	for (i = 0; i < 5; i++)
 	{
@@ -202,6 +225,7 @@ void CmfcuseSTLcontainersDlg::use_vector()
 	vec.resize(10);//此处将容器重新分配大小，容器的可容纳数量也会随之增加
 
 	//当我们更改vector的容器大小超过capacity的大小的时候，vector会重新配置内部的存储器，导致和vector元素相关的所有reference、pointers、iterator都会失效。
+	//指针失效的原因是因为为了增加容器的容量，vector<T> 容器的元素可能已经被复制或移到了新的内存地址
 	//内存重新分配以后，需要重新获取指针，避免指针失效。
 	v = vec.begin();
 	TRACE("the extended vector size:%d and the vec capacity:%d\n", vec.size(), vec.capacity());     
@@ -322,5 +346,18 @@ void CmfcuseSTLcontainersDlg::use_array()
 		tmp_d = tmp_d + 1;
 	}
 
+	//数组容器比较
+	if (data_d2> data_d4)    //容器会被逐元素的进行比较
+	{
+		TRACE("data_d2> data_d4!\n");
+	}
+	else
+	{
+		TRACE("data_d2< data_d4!\n");
+	}
 
+	//两个数组容器只要它们存放的是相同类型、相同个数的元素，就可以将一个数组容器赋给另一个
+	data_d2 = data_d4;
+
+	//数组容器的元素个数已经固定，无法使用插入迭代器
 }

@@ -25,6 +25,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mfc_dynamic_memory", "mfc_d
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mfc_use_STL_containers", "mfc_use_STL_containers\mfc_use_STL_containers.vcxproj", "{9F3F02FC-1B44-4FD2-9239-A6D26525699C}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mfc_use_reference", "mfc_use_reference\mfc_use_reference.vcxproj", "{6381149F-D42E-42DB-A285-B674A674025B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -167,6 +169,18 @@ Global
 		{9F3F02FC-1B44-4FD2-9239-A6D26525699C}.Release|x64.Build.0 = Release|x64
 		{9F3F02FC-1B44-4FD2-9239-A6D26525699C}.Release|x86.ActiveCfg = Release|Win32
 		{9F3F02FC-1B44-4FD2-9239-A6D26525699C}.Release|x86.Build.0 = Release|Win32
+		{6381149F-D42E-42DB-A285-B674A674025B}.Debug|Win32.ActiveCfg = Debug|Win32
+		{6381149F-D42E-42DB-A285-B674A674025B}.Debug|Win32.Build.0 = Debug|Win32
+		{6381149F-D42E-42DB-A285-B674A674025B}.Debug|x64.ActiveCfg = Debug|x64
+		{6381149F-D42E-42DB-A285-B674A674025B}.Debug|x64.Build.0 = Debug|x64
+		{6381149F-D42E-42DB-A285-B674A674025B}.Debug|x86.ActiveCfg = Debug|Win32
+		{6381149F-D42E-42DB-A285-B674A674025B}.Debug|x86.Build.0 = Debug|Win32
+		{6381149F-D42E-42DB-A285-B674A674025B}.Release|Win32.ActiveCfg = Release|Win32
+		{6381149F-D42E-42DB-A285-B674A674025B}.Release|Win32.Build.0 = Release|Win32
+		{6381149F-D42E-42DB-A285-B674A674025B}.Release|x64.ActiveCfg = Release|x64
+		{6381149F-D42E-42DB-A285-B674A674025B}.Release|x64.Build.0 = Release|x64
+		{6381149F-D42E-42DB-A285-B674A674025B}.Release|x86.ActiveCfg = Release|Win32
+		{6381149F-D42E-42DB-A285-B674A674025B}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
