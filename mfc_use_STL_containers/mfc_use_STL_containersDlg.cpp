@@ -195,11 +195,22 @@ void CmfcuseSTLcontainersDlg::use_vector()
 	vec_ui.back() = 50;   //back()函数返回vector最后一个元素的引用，我们也可以直接进行赋值
 	auto p_vec_ui = vec_ui.data();   //data()返回一个指向数组的指针，本例中返回unsigned int*类型
 
+
+	//向容器中添加元素
 	int i;
 	for (i = 0; i < 5; i++)
 	{
 		vec.push_back(i);
 	}
+
+	std::string str{ "alleged" };
+
+	//emplace_back函数的参数为是添加到容器中的对象的构造函数所需要的参数。emplace_back() 用它的参数作为构造函数的参数，在容器中生成对象。
+	//可以在 emplace_back() 函数中使用尽可能多的参数，只要它们满足对象构造函数的要求
+	//下面这个例子中，会调用接收三个参数的 string 构造函数，生成 string 对象，然后把它添加到 words 序列中。构造函数会生成一个从索引 2 开始、包含 str 中三个字符的子串。
+	vec_s.emplace_back(str, 2, 3);   //添加的字符串为“leg”
+
+
 
 	v_size = vec.size();      //vector大小为5
 	TRACE("the extended vector size:%d and the vec capacity:%d\n", v_size,vec.capacity());     //capacity()返回容器当前能够容纳的元素数量
@@ -214,6 +225,8 @@ void CmfcuseSTLcontainersDlg::use_vector()
 
 	//使用迭代器访问向量中的值
 	//可以用迭代器来遍历对象集合中的元素，属于广义指针
+	//普通指针指向内存中的一个地址
+	//迭代器可以指向容器中的一个位置
 	vector<int>::iterator v = vec.begin();  //感觉迭代器有点类似于对象集合的指针
 	//while (v!=vec.end())
 	//{
@@ -247,6 +260,7 @@ void CmfcuseSTLcontainersDlg::use_vector()
 		TRACE("value of v =%d\n", *v);
 		v++;
 	}
+	
 
 
 	int tmp;
@@ -263,6 +277,59 @@ void CmfcuseSTLcontainersDlg::use_vector()
 	{
 		TRACE("error:%s",e.what());
 	}
+
+
+	//vector插入元素
+	//在插入元素之前，最好确认一下向量的容量
+	vec_s.reserve(50);   //此处我们先调整一下容量，防止后面向量自动调整容量，会导致指针失效
+
+
+	//string str2(5, 'A');
+	//emplace函数：第一个参数是一个迭代器，它确定了对象生成的位置。对象会被插入到迭代器所指定元素的后面。第一个参数后的参数，都作为插入元素的构造函数的参数传入
+	//emplace() 会返回一个指向横入元素的迭代器
+	auto vec_s_iter = vec_s.emplace(++std::begin(vec_s),5,'A');
+
+	//++vec_s_iter;
+	vec_s_iter=vec_s.emplace(++vec_s_iter, "$$$$");
+	vec_s_iter=vec_s.emplace(vec_s_iter, "&&&&");
+
+
+	//练习使用insert()插入元素
+	std::vector<std::string> words{"one","three","eight"};
+	words.reserve(30);
+
+	auto iter = std::begin(words);
+	iter++;
+	//insert()函数会将新元素插入到当前iter所指向的元素的前面
+	iter = words.insert(iter, "two");
+
+	//批量插入元素
+	std::string more[]{ "five","six","seven" };
+	iter = std::end(words);			//end()函数返回一个数组中最后一个元素的下一个位置
+	iter--;							//此时iter指向words最后一个元素
+	iter = words.insert(iter, std::begin(more), std::end(more));	//返回的迭代器指向插入的第一个元素
+
+
+	//向vector末尾插入一个元素
+	iter = words.insert(std::end(words), "ten");
+
+	//向vector中插入多次单个元素
+	//参数二：表示元素插入的次数
+	iter = words.insert(std::cend(words) - 1, 2, "nine");
+
+	//可以直接插入初始化列表指定的元素
+	iter = words.insert(std::cend(words), { std::string {"twelve"},std::string {"thirteen"} });   
+
+	//insert()函数的第一个参数：需要一个标准的迭代器来指定插入点；它不接受一个反向迭代器
+	auto iter_r = std::rbegin(words);  //此时指向反向的第一个元素
+
+	iter_r = std::rend(words);
+	iter_r--;    //指向反向的最后一个元素
+
+
+
+
+
 
 	//使用vector的风险：当push_back时，有可能会超出vector的capacity，这样就会导致vector重新分配内存空间，导致和vector元素相关的所有reference、pointers、iterator都会失效
 	//解决办法：
