@@ -326,6 +326,63 @@ void CmfcuseSTLcontainersDlg::use_vector()
 	iter_r = std::rend(words);
 	iter_r--;    //指向反向的最后一个元素
 
+	//通过find函数查找指定对象的最后一个元素，并在其后面插入一个新的元素
+	std::vector<std::string> str_s{ "one","two","one","three" };
+	//在向量中反向查找one这个字符串
+	iter_r = std::find(std::rbegin(str_s),std::rend(str_s),"one");   //因为是反向查找，所以会返回一个反向迭代器
+
+	//iter= str_s.insert(iter_r, "six");   //error:vector 的成员函数 insert()，需要一个标准的迭代器来指定插入点；它不接受一个反向迭代器——这无法通过编译
+
+	//成员函数 base() 可以得到一个标准迭代器，从序列反方向来看，它指向 riter 前的一个位置，也是朝向序列结束的方向
+	iter=str_s.insert(iter_r.base(), "five");   //此处返回一个正向迭代器
+
+
+
+	//vector删除元素
+	//只能通过容器的成员函数来删除元素
+	//删除所有元素
+	std::vector<int> data_i(100, 99);
+	data_i.clear();
+	//删除之后，vector的size会变为0，但是容量capasity仍为100
+
+	//删除容器的最后一个元素
+	std::vector<int> data_i2{1,2,3,4,5,6,7,8,9};
+	data_i2.pop_back();
+
+
+	//如果不在意元素在容器内部存储的顺序，都可以通过pop_back函数删除容器内部的任何一个元素
+	//首先通过swap函数将需要删除的元素交换到容器末尾
+	//假设删除容器中的第二个元素
+	auto begin = std::begin(data_i2) + 1;
+	auto end = std::end(data_i2) - 1;
+	//std::swap(begin, end);			//这样的写法有问题只是将两个迭代器做了交换
+	std::swap(data_i2.at(1), data_i2.at(data_i2.size()-1));
+	data_i2.pop_back();
+
+	//vector中也有成员函数swap,用来交换两个 vector 容器中的元素
+	std::vector<int> data_i3{ 10,20,30,40,50,60,70,80,90};
+	data_i2.swap(data_i3);  //两个vector互相交换了各自的元素
+
+
+	//删除一个容器中的一个或多个元素
+	auto i3_begin = data_i3.begin();
+	i3_begin++;
+	i3_begin=data_i3.erase(i3_begin);   //会返回一个迭代器，它指向被删除元素后的一个元素
+
+
+	//删除容器中的多个元素
+	auto i3_end = data_i3.end();
+	i3_end= i3_end-2;
+	//erase会删除第一个迭代器指向的元素和第二个迭代器指向的元素之间的元素（但是并不包括第二个迭代器指向的元素）
+	i3_begin = data_i3.erase(i3_begin,i3_end);
+
+	//删除容器中指定内容的元素
+	std::vector<std::string> words_2{ "one","none","some","all","none","most","many" };
+	auto iter_words_2 = std::remove(std::begin(words_2), std::end(words_2), "none");   //iter_words_2指向最后一个元素之后的位置
+
+	//经过remove函数后,其他元素会顶替被删除元素的位置，多出来的位置会在最后用空字符串进行替代，所以vector的大小并没有发生变化
+	//我们可以将空字符串删除
+	iter_words_2 = words_2.erase(iter_words_2, std::end(words_2));    //此时words_2便不包括空字符串
 
 
 
@@ -335,8 +392,17 @@ void CmfcuseSTLcontainersDlg::use_vector()
 	//解决办法：
 	//方法一：在创建容器后，第一时间为容器分配足够大的空间，避免重新分配内存：vec.reserve(10000);
 	//方法二：该方法是创建容器时，利用构造函数初始化的出足够的空间，vector<int> vec(10000);
-	//另外一个需要注意的事项：用[]访问，vector 退化为数组，不会进行越界的判断。此时推荐使用 at()，会先进行越界检查。（这一条明天再验证）
+	//另外一个需要注意的事项：用[]访问，vector 退化为数组，不会进行越界的判断。此时推荐使用 at()，会先进行越界检查。
+
+	//学习总结
+	//1.只能通过容器的成员函数来操作容器：比如添加、插入、删除元素
+	//2.迭代器属于容器中元素指针，可以遍历容器中的元素或者指向容器中的任何一个元素，通过两个迭代器配合使用，就可以指向容器中的一段元素，为后续的算法操作（比如容器拷贝，排序等等）提供方便
+	//3.可以通过容器的成员函数返回指向不同位置的不同类型的迭代器
 }
+
+//学习双端队列
+void CmfcuseSTLcontainersDlg
+
 
 //数组容器
 void CmfcuseSTLcontainersDlg::use_array()
