@@ -8,6 +8,7 @@
 #include "afxdialogex.h"
 #include <vector>
 #include <array>
+#include <deque>
 #include <algorithm>
 #include <numeric>
 using namespace std;
@@ -109,6 +110,7 @@ BOOL CmfcuseSTLcontainersDlg::OnInitDialog()
 
 	use_vector();
 	use_array();
+	use_deque();
 
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
@@ -401,7 +403,53 @@ void CmfcuseSTLcontainersDlg::use_vector()
 }
 
 //学习双端队列
-void CmfcuseSTLcontainersDlg
+//vector只能在尾部高效的插入或删除元素
+//deque可以在头部和尾部高效的插入或删除元素：比如像处理先入先出事务
+//deque的大小和容量总是相等,所以在deque中只有size()成员函数
+void CmfcuseSTLcontainersDlg::use_deque()
+{
+	//生成容器
+	std::deque<int> a_deque;   //由于未指定大小，因此容器大小为0
+
+	//指定容器大小
+	std::deque<int> my_deque(10);   //容器大小为10
+
+	//通过初始化列表生成容器
+	std::deque<std::string> words{ "one","none","some","all","none","most","many" };
+
+	//deque容器的拷贝构造函数
+	std::deque<std::string> words_copy{ words };
+
+	//只拷贝某一部分元素
+	std::deque<std::string> words_part{ std::begin(words),std::begin(words) + 5 };
+
+
+	//获取容器中的元素
+	try
+	{
+		auto tmp = words.at(100);     //使用at成员函数可以进行边界检查
+	}
+	catch (const std::exception& e)
+	{
+		TRACE("error:%s", e.what());     //输出：error:invalid deque<T> subscript 
+	}
+
+
+	//deque添加和删除元素
+
+	std::deque<int> numbers{ 2,3,4 };
+
+	numbers.push_front(11);
+	numbers.push_back(12);
+	auto first_number = numbers.front();   //返回第一个元素
+
+	//deque插入元素
+
+
+
+
+	//如果不提前给deque分配好空间的话，deque的size是实时随着元素的增减而变化的
+}
 
 
 //数组容器
