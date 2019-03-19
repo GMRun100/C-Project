@@ -8,6 +8,7 @@
 #include "afxdialogex.h"
 #include <vector>
 #include <array>
+#include <deque>
 #include <algorithm>
 #include <numeric>
 using namespace std;
@@ -109,6 +110,7 @@ BOOL CmfcuseSTLcontainersDlg::OnInitDialog()
 
 	use_vector();
 	use_array();
+	use_deque();
 
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
@@ -195,11 +197,22 @@ void CmfcuseSTLcontainersDlg::use_vector()
 	vec_ui.back() = 50;   //back()函数返回vector最后一个元素的引用，我们也可以直接进行赋值
 	auto p_vec_ui = vec_ui.data();   //data()返回一个指向数组的指针，本例中返回unsigned int*类型
 
+
+	//向容器中添加元素
 	int i;
 	for (i = 0; i < 5; i++)
 	{
 		vec.push_back(i);
 	}
+
+	std::string str{ "alleged" };
+
+	//emplace_back函数的参数为是添加到容器中的对象的构造函数所需要的参数。emplace_back() 用它的参数作为构造函数的参数，在容器中生成对象。
+	//可以在 emplace_back() 函数中使用尽可能多的参数，只要它们满足对象构造函数的要求
+	//下面这个例子中，会调用接收三个参数的 string 构造函数，生成 string 对象，然后把它添加到 words 序列中。构造函数会生成一个从索引 2 开始、包含 str 中三个字符的子串。
+	vec_s.emplace_back(str, 2, 3);   //添加的字符串为“leg”
+
+
 
 	v_size = vec.size();      //vector大小为5
 	TRACE("the extended vector size:%d and the vec capacity:%d\n", v_size,vec.capacity());     //capacity()返回容器当前能够容纳的元素数量
@@ -214,6 +227,8 @@ void CmfcuseSTLcontainersDlg::use_vector()
 
 	//使用迭代器访问向量中的值
 	//可以用迭代器来遍历对象集合中的元素，属于广义指针
+	//普通指针指向内存中的一个地址
+	//迭代器可以指向容器中的一个位置
 	vector<int>::iterator v = vec.begin();  //感觉迭代器有点类似于对象集合的指针
 	//while (v!=vec.end())
 	//{
@@ -247,6 +262,7 @@ void CmfcuseSTLcontainersDlg::use_vector()
 		TRACE("value of v =%d\n", *v);
 		v++;
 	}
+	
 
 
 	int tmp;
@@ -264,12 +280,177 @@ void CmfcuseSTLcontainersDlg::use_vector()
 		TRACE("error:%s",e.what());
 	}
 
+
+	//vector插入元素
+	//在插入元素之前，最好确认一下向量的容量
+	vec_s.reserve(50);   //此处我们先调整一下容量，防止后面向量自动调整容量，会导致指针失效
+
+
+	//string str2(5, 'A');
+	//emplace函数：第一个参数是一个迭代器，它确定了对象生成的位置。对象会被插入到迭代器所指定元素的后面。第一个参数后的参数，都作为插入元素的构造函数的参数传入
+	//emplace() 会返回一个指向横入元素的迭代器
+	auto vec_s_iter = vec_s.emplace(++std::begin(vec_s),5,'A');
+
+	//++vec_s_iter;
+	vec_s_iter=vec_s.emplace(++vec_s_iter, "$$$$");
+	vec_s_iter=vec_s.emplace(vec_s_iter, "&&&&");
+
+
+	//练习使用insert()插入元素
+	std::vector<std::string> words{"one","three","eight"};
+	words.reserve(30);
+
+	auto iter = std::begin(words);
+	iter++;
+	//insert()函数会将新元素插入到当前iter所指向的元素的前面
+	iter = words.insert(iter, "two");
+
+	//批量插入元素
+	std::string more[]{ "five","six","seven" };
+	iter = std::end(words);			//end()函数返回一个数组中最后一个元素的下一个位置
+	iter--;							//此时iter指向words最后一个元素
+	iter = words.insert(iter, std::begin(more), std::end(more));	//返回的迭代器指向插入的第一个元素
+
+
+	//向vector末尾插入一个元素
+	iter = words.insert(std::end(words), "ten");
+
+	//向vector中插入多次单个元素
+	//参数二：表示元素插入的次数
+	iter = words.insert(std::cend(words) - 1, 2, "nine");
+
+	//可以直接插入初始化列表指定的元素
+	iter = words.insert(std::cend(words), { std::string {"twelve"},std::string {"thirteen"} });   
+
+	//insert()函数的第一个参数：需要一个标准的迭代器来指定插入点；它不接受一个反向迭代器
+	auto iter_r = std::rbegin(words);  //此时指向反向的第一个元素
+
+	iter_r = std::rend(words);
+	iter_r--;    //指向反向的最后一个元素
+
+	//通过find函数查找指定对象的最后一个元素，并在其后面插入一个新的元素
+	std::vector<std::string> str_s{ "one","two","one","three" };
+	//在向量中反向查找one这个字符串
+	iter_r = std::find(std::rbegin(str_s),std::rend(str_s),"one");   //因为是反向查找，所以会返回一个反向迭代器
+
+	//iter= str_s.insert(iter_r, "six");   //error:vector 的成员函数 insert()，需要一个标准的迭代器来指定插入点；它不接受一个反向迭代器——这无法通过编译
+
+	//成员函数 base() 可以得到一个标准迭代器，从序列反方向来看，它指向 riter 前的一个位置，也是朝向序列结束的方向
+	iter=str_s.insert(iter_r.base(), "five");   //此处返回一个正向迭代器
+
+
+
+	//vector删除元素
+	//只能通过容器的成员函数来删除元素
+	//删除所有元素
+	std::vector<int> data_i(100, 99);
+	data_i.clear();
+	//删除之后，vector的size会变为0，但是容量capasity仍为100
+
+	//删除容器的最后一个元素
+	std::vector<int> data_i2{1,2,3,4,5,6,7,8,9};
+	data_i2.pop_back();
+
+
+	//如果不在意元素在容器内部存储的顺序，都可以通过pop_back函数删除容器内部的任何一个元素
+	//首先通过swap函数将需要删除的元素交换到容器末尾
+	//假设删除容器中的第二个元素
+	auto begin = std::begin(data_i2) + 1;
+	auto end = std::end(data_i2) - 1;
+	//std::swap(begin, end);			//这样的写法有问题只是将两个迭代器做了交换
+	std::swap(data_i2.at(1), data_i2.at(data_i2.size()-1));
+	data_i2.pop_back();
+
+	//vector中也有成员函数swap,用来交换两个 vector 容器中的元素
+	std::vector<int> data_i3{ 10,20,30,40,50,60,70,80,90};
+	data_i2.swap(data_i3);  //两个vector互相交换了各自的元素
+
+
+	//删除一个容器中的一个或多个元素
+	auto i3_begin = data_i3.begin();
+	i3_begin++;
+	i3_begin=data_i3.erase(i3_begin);   //会返回一个迭代器，它指向被删除元素后的一个元素
+
+
+	//删除容器中的多个元素
+	auto i3_end = data_i3.end();
+	i3_end= i3_end-2;
+	//erase会删除第一个迭代器指向的元素和第二个迭代器指向的元素之间的元素（但是并不包括第二个迭代器指向的元素）
+	i3_begin = data_i3.erase(i3_begin,i3_end);
+
+	//删除容器中指定内容的元素
+	std::vector<std::string> words_2{ "one","none","some","all","none","most","many" };
+	auto iter_words_2 = std::remove(std::begin(words_2), std::end(words_2), "none");   //iter_words_2指向最后一个元素之后的位置
+
+	//经过remove函数后,其他元素会顶替被删除元素的位置，多出来的位置会在最后用空字符串进行替代，所以vector的大小并没有发生变化
+	//我们可以将空字符串删除
+	iter_words_2 = words_2.erase(iter_words_2, std::end(words_2));    //此时words_2便不包括空字符串
+
+
+
+
+
 	//使用vector的风险：当push_back时，有可能会超出vector的capacity，这样就会导致vector重新分配内存空间，导致和vector元素相关的所有reference、pointers、iterator都会失效
 	//解决办法：
 	//方法一：在创建容器后，第一时间为容器分配足够大的空间，避免重新分配内存：vec.reserve(10000);
 	//方法二：该方法是创建容器时，利用构造函数初始化的出足够的空间，vector<int> vec(10000);
-	//另外一个需要注意的事项：用[]访问，vector 退化为数组，不会进行越界的判断。此时推荐使用 at()，会先进行越界检查。（这一条明天再验证）
+	//另外一个需要注意的事项：用[]访问，vector 退化为数组，不会进行越界的判断。此时推荐使用 at()，会先进行越界检查。
+
+	//学习总结
+	//1.只能通过容器的成员函数来操作容器：比如添加、插入、删除元素
+	//2.迭代器属于容器中元素指针，可以遍历容器中的元素或者指向容器中的任何一个元素，通过两个迭代器配合使用，就可以指向容器中的一段元素，为后续的算法操作（比如容器拷贝，排序等等）提供方便
+	//3.可以通过容器的成员函数返回指向不同位置的不同类型的迭代器
 }
+
+//学习双端队列
+//vector只能在尾部高效的插入或删除元素
+//deque可以在头部和尾部高效的插入或删除元素：比如像处理先入先出事务
+//deque的大小和容量总是相等,所以在deque中只有size()成员函数
+void CmfcuseSTLcontainersDlg::use_deque()
+{
+	//生成容器
+	std::deque<int> a_deque;   //由于未指定大小，因此容器大小为0
+
+	//指定容器大小
+	std::deque<int> my_deque(10);   //容器大小为10
+
+	//通过初始化列表生成容器
+	std::deque<std::string> words{ "one","none","some","all","none","most","many" };
+
+	//deque容器的拷贝构造函数
+	std::deque<std::string> words_copy{ words };
+
+	//只拷贝某一部分元素
+	std::deque<std::string> words_part{ std::begin(words),std::begin(words) + 5 };
+
+
+	//获取容器中的元素
+	try
+	{
+		auto tmp = words.at(100);     //使用at成员函数可以进行边界检查
+	}
+	catch (const std::exception& e)
+	{
+		TRACE("error:%s", e.what());     //输出：error:invalid deque<T> subscript 
+	}
+
+
+	//deque添加和删除元素
+
+	std::deque<int> numbers{ 2,3,4 };
+
+	numbers.push_front(11);
+	numbers.push_back(12);
+	auto first_number = numbers.front();   //返回第一个元素
+
+	//deque插入元素
+
+
+
+
+	//如果不提前给deque分配好空间的话，deque的size是实时随着元素的增减而变化的
+}
+
 
 //数组容器
 void CmfcuseSTLcontainersDlg::use_array()
