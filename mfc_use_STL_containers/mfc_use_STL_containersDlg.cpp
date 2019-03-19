@@ -9,6 +9,7 @@
 #include <vector>
 #include <array>
 #include <deque>
+#include <list>
 #include <algorithm>
 #include <numeric>
 using namespace std;
@@ -111,6 +112,7 @@ BOOL CmfcuseSTLcontainersDlg::OnInitDialog()
 	use_vector();
 	use_array();
 	use_deque();
+	use_list();
 
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
@@ -436,19 +438,84 @@ void CmfcuseSTLcontainersDlg::use_deque()
 
 
 	//deque添加和删除元素
-
+	//deque：添加元素
 	std::deque<int> numbers{ 2,3,4 };
 
 	numbers.push_front(11);
 	numbers.push_back(12);
 	auto first_number = numbers.front();   //返回第一个元素
+	//deque:删除元素
+	numbers.pop_front();
+	numbers.pop_back();
 
 	//deque插入元素
+	//insert用法与vector类似
+	auto iter=numbers.insert(std::end(numbers),13);  //返回指向插入元素的迭代器
 
+	iter = std::find(std::begin(numbers), std::end(numbers), 100);    //如果未查找到，返回的迭代器指向参数二所指向的元素的下一个元素
+	//iter--;
+	iter = std::find(std::begin(numbers), std::end(numbers), 2);   //指向查找到的第一个元素
+	iter=numbers.insert(iter,15);  //插入到所指向的元素的前面
 
+	//插入多个元素
+	//批量插入其他deque数组
+	std::deque<int> numbers_tmp{ 10,20,30 };
+	iter = numbers.insert(std::begin(numbers),std::begin(numbers_tmp), std::end(numbers_tmp));   //返回指向插入的第一个元素的迭代器
+	//利用初始化列表插入多个元素
+	iter = numbers.insert(iter, { 100,200,300 });
+
+	//替换元素
+	std::deque<std::string> words2{ "one","two","three","four" };
+	//auto init_list = { "seven","eight","nine" };   //这样写init_list的类型为char const*类型
+	auto init_list = { std::string{ "seven"},std::string{"eight"},std::string{"nine"} };
+	words2.assign(init_list);   //words中的元素被整体替换
+
+	//替换元素：直接通过初始化列表替换
+	words2.assign({ "11","12","13" });
+
+	//替换元素：通过迭代器替换
+	std::vector<std::string> wordset{ "this","that","these","those" };
+	words2.assign(std::begin(wordset) + 1, std::end(wordset));   //替换范围：参数一指向的元素，参数二指向的元素的前一个元素之间的元素
+
+	//替换元素：使用重复的对象
+	//参数一：替换的个数  参数二：替换的元素
+	words2.assign(8, "8");
+
+	//替换元素：通过重载赋值运算符
+	words2 = { "12","13","14" };
 
 
 	//如果不提前给deque分配好空间的话，deque的size是实时随着元素的增减而变化的
+}
+
+//list容器
+//list属于双向链表
+//优势：在序列已知的任何位置插入或删除元素
+//劣势：由于list属于链表，因此无法索引元素
+void CmfcuseSTLcontainersDlg::use_list()
+{
+	//创建list容器
+	//创建一个空list容器
+	std::list<std::string> words;
+
+	//创建具有给定数量的list容器
+	std::list<std::double_t> value(50,3.1415926);    //注意不能使用{50,3.1415926}，否则将仅包含两个元素
+
+	//创建：利用拷贝构造函数
+	std::list<double> values_copy{ value };     //相当于用value初始化values_copy
+
+	//创建：利用迭代器
+	std::list<double> samples {++std::begin(value),--std::end(value)};   //因为list的begin和end返回的是双向迭代器，因此无法用加减整数的办法移动迭代器，我觉得是无法判断迭代器的移动方向导致
+
+	//增加元素
+	std::list<std::string> names{ "benliu","guooujie","weiyongxin" };
+	names.push_front("yuanyuan");
+	names.push_back("yangzengxiao");
+
+
+
+
+
 }
 
 

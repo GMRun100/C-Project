@@ -14,6 +14,7 @@ public:
 	void use_vector();
 	void use_array();
 	void use_deque();
+	void use_list();
 
 // 对话框数据
 #ifdef AFX_DESIGN_TIME
