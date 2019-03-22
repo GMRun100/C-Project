@@ -512,8 +512,65 @@ void CmfcuseSTLcontainersDlg::use_list()
 	names.push_front("yuanyuan");
 	names.push_back("yangzengxiao");
 
+	//插入元素
+	std::list<int> data(10, 55);
+
+	data.insert(++std::begin(data), 66);
+
+	//插入元素：在指定位置插入几个相同的元素
+	auto iter = std::begin(data);
+	//移动迭代器：不能直接使用+号或者－号
+	std::advance(iter, 9);  //从当前指向的位置移动9个元素
+	data.insert(iter, 3, 88);
+
+	//插入元素：将其他容器的元素插入到当前容器中
+	auto data_final = --(--std::end(data));
+
+	std::vector<int> numbers(10, 5);
+	data.insert(--(--std::end(data)), cbegin(numbers), cend(numbers));
+	//我们发现再插入完元素后指向list容器倒数第二个元素的迭代器并没有失效，应为倒数第二个元素并没有发生移动
+	//list 元素的迭代器只会在它所指向的元素被删除时才会失效
+
+	//在list容器中直接构造元素
+	std::list<std::string> names2{ "benliu","guooujie","weiyongxin" };
+	names2.emplace_back("yuan");
+	std::string tmp_name("zengxiao");
+	names2.emplace_back(std::move(tmp_name));    //std::move() 函数将 tmp_name 的右值引用传入 emplace_back() 函数。这个操作执行后，tmp_name 变为空，因为它的内容已经被移到 list 中
+	names2.emplace_front("hualong");
+	names2.emplace(++std::begin(names2), "huahua");
+
+	
+	//list删除元素
+	std::list<int> numbers2{ 2,5,2,3,6,7,8,2,9 };
+	//删除指定位置的元素
+	auto iter2=numbers2.erase(--(--std::end(numbers2)));    //删除倒数第二个元素,返回指向删除元素的后一个元素的指针
+
+	//删除两个迭代器指向之间的元素
+	iter2 = numbers2.erase(++(std::begin(numbers2)), --(std::end(numbers2)));  //只剩最后一个元素和第一个元素
+
+	//删除指定的元素
+	std::list<int> numbers3{ 2,5,2,3,6,7,8,2,9 };
+	numbers3.remove(2);
+
+	//其他容器没有remove成员函数
+	//deque删除指定的元素
+	std::deque<int> numbers3_deque{ 2,5,2,3,6,7,8,2,9 };
+	//std::remove返回一个迭代器，该迭代器指向未移去的最后一个元素的下一个位置
+	auto iter2_deque = std::remove(begin(numbers3_deque), end(numbers3_deque), 2);     //此时容器的大小并没有发生变化，被删除元素的位置会由后面的元素来顶替，
+	iter2_deque = numbers3_deque.erase(iter2_deque, end(numbers3_deque));      //将多余的元素删除
+
+	//remove_if:参数是一个 lambda 表达式，但也可以是一个函数对象。
+	std::list<int> numbers4{ 2,5,2,3,6,7,8,2,9 };
+	numbers4.remove_if([](int n) {return n % 2 == 0; });     
 
 
+	//移除连续的重复元素
+	std::list<std::string> words2{ "one","two","two" ,"two" ,"two" ,"three","two" ,"two" ,"four","four" };
+	words2.unique();   //这里移除的是连续的重复元素，并不是移除所有的重复元素
+	//list当中如果所指向的元素没有被删除，则其迭代器不会失效
+
+
+	//list排序
 
 
 }
