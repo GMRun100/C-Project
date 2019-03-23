@@ -18,6 +18,37 @@ using namespace std;
 #define new DEBUG_NEW
 #endif
 
+//重载operator
+class my_greater
+{
+public:
+	my_greater();
+	~my_greater();
+
+	bool operator() (std::string s1,std::string s2)
+	{
+		if(s1[0]==s2[0])
+		{
+			return s1.length() > s2.length();
+		}
+		else
+		{
+			return s1 > s2;
+		}
+	}
+
+private:
+
+};
+
+my_greater::my_greater()
+{
+}
+
+my_greater::~my_greater()
+{
+}
+
 
 
 
@@ -571,6 +602,90 @@ void CmfcuseSTLcontainersDlg::use_list()
 
 
 	//list排序
+	std::list<std::string> names3{ "benliu","guooujie","weiyongxin" };
+	//排序：sort()使用operator()函数来进行比较，great()函数重载了operator()成员函数
+	names3.sort(std::greater<std::string>());     //名字按降序进行排列
+
+	//排序:自定义类重载operator函数
+	std::list<std::string> names4{ "benliu","guooujie","weiyongxin" ,"yuan","yang","ping","yangzengxiao"};
+	names4.sort(my_greater());
+
+	//排序：使用lambda表达式
+	std::list<std::string> names5{ "benliu","guooujie","weiyongxin" ,"yuan","yang","ping","yangzengxiao" };
+	names5.sort([](const std::string s1, std::string s2)
+	{
+		if (s1[0] == s2[0])
+		{
+			return s1.length() > s2.length();
+		}
+		else
+		{
+			return s1 > s2;
+		}
+	});
+
+	//合并元素
+	//两个list都必须是升序排列
+	std::list<int> my_values{2,4,6,14 };
+	std::list<int> your_values{ -2,1,7,10 };
+	my_values.merge(your_values);    //执行完此条语句后your_values的size为0
+
+	//合并元素：提供合并的方法
+	std::list<std::string> my_workmates{"benliu","guooujie","weiyongxin" };
+	std::list<std::string> my_workmates2{ "yuan","yang","ping","yangzengxiao" };
+	auto comp_str = [](const std::string s1, const std::string s2) {return s1[0] < s2[0]; };
+	//排序之前先确保两个list已经按照相同的排序方式进行排序
+	my_workmates.sort(comp_str);
+	my_workmates2.sort(comp_str);
+	my_workmates.merge(my_workmates2, comp_str);
+
+
+	//拼接元素
+	//拼接某一元素
+	std::list<std::string> my_workmates3{ "benliu","guooujie","weiyongxin" };
+	std::list<std::string> my_workmates4{ "yuan","yang","ping","yangzengxiao" };
+
+	//splice() 的第一个参数是指向目的容器的迭代器。第二个参数是元素的来源。第三个参数是一个指向源list容器中被粘接元素的迭代器，它会被插入到第一个参数所指向位置之前
+	my_workmates3.splice(std::begin(my_workmates3), my_workmates4, ++std::begin(my_workmates4));   //此时my_workmates4将只剩下三个元素
+
+	//拼接一段元素
+	std::list<std::string> my_workmates5{ "benliu","guooujie","weiyongxin" };
+	std::list<std::string> my_workmates6{ "yuan","yang","ping","yangzengxiao" };
+	my_workmates5.splice(++std::begin(my_workmates5), my_workmates6, ++std::begin(my_workmates6), std::end(my_workmates6)); //此时my_workmates6将只剩下第一个元素
+
+	//拼接所有元素
+	std::list<std::string> my_workmates7{ "benliu","guooujie","weiyongxin" };
+	std::list<std::string> my_workmates8{ "yuan","yang","ping","yangzengxiao" };
+	my_workmates7.splice(std::begin(my_workmates7), my_workmates8);				//此时my_workmates8将为空
+
+	//访问list中的元素
+	//获取第一个元素
+	string my_first = my_workmates7.front();    //返回第一个元素的引用
+	auto my_end = my_workmates7.back();			//返回最后一个元素的引用
+	
+	//遍历所有元素,使用基于范围的循环
+	for (const auto& workmate : my_workmates7)
+	{
+		TRACE("my_workmates7:%s\n", workmate.c_str());
+	}
+
+	//使用迭代器遍历所有元素
+	for (auto my_iter = std::begin(my_workmates7); my_iter != std::end(my_workmates7); my_iter++)
+	{
+		TRACE("my_workmates7 from iter:%s\n", my_iter->c_str());    //因为iter属于广义指针，所以此处需用->获取元素
+	}
+	//另一个遍历获取所有元素的例子
+	list<int> sortlist;
+	sortlist.push_back(3);
+	sortlist.push_back(15);
+	sortlist.push_back(8);
+	sortlist.push_back(7);
+
+	for (auto sortlist_iter = std::begin(sortlist); sortlist_iter != std::end(sortlist); sortlist_iter++)
+	{
+		TRACE("sortlist from iter:%d\n", *sortlist_iter);
+	}
+
 
 
 }
