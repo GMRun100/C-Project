@@ -15,6 +15,8 @@ public:
 	void use_array();
 	void use_deque();
 	void use_list();
+	void use_forward_list();
+
 
 // 对话框数据
 #ifdef AFX_DESIGN_TIME

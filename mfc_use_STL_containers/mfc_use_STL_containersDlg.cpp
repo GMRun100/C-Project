@@ -10,6 +10,7 @@
 #include <array>
 #include <deque>
 #include <list>
+#include <forward_list>
 #include <algorithm>
 #include <numeric>
 using namespace std;
@@ -144,6 +145,7 @@ BOOL CmfcuseSTLcontainersDlg::OnInitDialog()
 	use_array();
 	use_deque();
 	use_list();
+	use_forward_list();
 
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
@@ -685,8 +687,31 @@ void CmfcuseSTLcontainersDlg::use_list()
 	{
 		TRACE("sortlist from iter:%d\n", *sortlist_iter);
 	}
+}
+//forward_list属于单向链表
+//相比于list无法反向遍历元素，只能从头到尾遍历元素
+void CmfcuseSTLcontainersDlg::use_forward_list()
+{
+	//创建forward_list
+	std::forward_list<std::string> my_workmates{ "benliu","guooujie","weiyongxin", "yuan","yang","ping","yangzengxiao"};
+	//计算大小
+	auto count = std::distance(std::begin(my_workmates),std::end(my_workmates));   //count类型为int 大小为3
 
+	//获取forward_list指定位置的元素
+	auto iter = std::begin(my_workmates);
+	size_t m_ad{ 3 };
+	std::advance(iter, m_ad);
+	try
+	{
+		TRACE("the elem in my_workmates is %s\n", iter->c_str());   
+	}
+	catch (const std::exception& e)
+	{
+		TRACE("the error is %s\n", e.what());
+	}
 
+	//
+	
 
 }
 
