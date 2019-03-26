@@ -50,7 +50,10 @@ my_greater::~my_greater()
 {
 }
 
-
+bool myRemove(const int& num)
+{
+	return num < 4;
+}
 
 
 // 用于应用程序“关于”菜单项的 CAboutDlg 对话框
@@ -710,8 +713,74 @@ void CmfcuseSTLcontainersDlg::use_forward_list()
 		TRACE("the error is %s\n", e.what());
 	}
 
-	//
+	//拼接元素
+	//拼接单个元素
+	std::forward_list<std::string> my_workmates2_1{ "benliu","guooujie","weiyongxin"};
+	std::forward_list<std::string> my_workmates2_2{ "yuan","yang","ping","yangzengxiao" };
+	//before_begin返回一个指向第一个元素之前位置的迭代器
+	auto iter2 = std::begin(my_workmates2_2);
+	iter2++;
+	//list的splice成员函数是插入到参数一所指向的元素之前，而forward_list的splice_after是插入到参数一所指向的元素之后
+	my_workmates2_1.splice_after(my_workmates2_1.before_begin(), my_workmates2_2,iter2);   //此处移动的是my_workmates2_2,iter2所指向的元素后面的元素
+
+	//拼接多个元素
+	std::forward_list<std::string> my_workmates2_3{ "benliu","guooujie","weiyongxin" };
+	std::forward_list<std::string> my_workmates2_4{ "yuan","yang","ping","yangzengxiao" };
+	//splice_after黏贴的范围是参数三所指向的元素的写一个元素开始，这与splice不同
+	my_workmates2_3.splice_after(my_workmates2_3.before_begin(), my_workmates2_4, ++std::begin(my_workmates2_4), std::end(my_workmates2_4));
+
+	//拼接另外一个容器
+	std::forward_list<std::string> my_workmates2_5{ "benliu","guooujie","weiyongxin" };
+	std::forward_list<std::string> my_workmates2_6{ "yuan","yang","ping","yangzengxiao" };
+
+	my_workmates2_5.splice_after(my_workmates2_5.before_begin(),my_workmates2_6);   //my_workmates2_6执行完后为空
+
+	//插入元素，insert
+	//插入单个元素
+	std::forward_list<std::string> my_workmates3_1{ "benliu","guooujie","weiyongxin" };
+	my_workmates3_1.insert_after(my_workmates3_1.before_begin(),"yuan");
 	
+	//插入多个元素
+	std::forward_list<std::string> my_workmates3_2{ "benliu","guooujie","weiyongxin" };
+	my_workmates3_2.insert_after(my_workmates3_2.before_begin(),3,"yuan");
+
+	//插入元素
+	//与splice_after的区别：splice_after会移除源容器中的元素，而insert_after仅仅是拷贝
+	std::forward_list<std::string> my_workmates3_3{ "benliu","guooujie","weiyongxin" };
+	std::forward_list<std::string> my_workmates3_4{ "yuan","yang","ping","yangzengxiao" };
+	my_workmates3_3.insert_after(my_workmates3_3.before_begin(),std::begin(my_workmates3_4),std::end(my_workmates3_4));
+
+	//排序，sort
+	std::forward_list<std::string> my_workmates4_1{ "benliu","guooujie","weiyongxin" };
+	//升序排列
+	my_workmates4_1.sort();
+	//降序排列
+	my_workmates4_1.sort(std::greater<std::string>());     //调用了greater模板
+
+	//排序也可以自定义函数，重载operator即可，具体用法可参考list
+
+	//移除连续重复元素，unique
+	//注意不连续的重复元素会分别处理
+	std::forward_list<std::string> my_workmates5_1{ "benliu","benliu","guooujie","guooujie","guooujie","weiyongxin","guooujie","guooujie","guooujie" };
+	my_workmates5_1.unique();
+
+	//合并元素 merge
+	std::forward_list<std::string> my_workmates6_1{ "benliu","guooujie","weiyongxin" };
+	std::forward_list<std::string> my_workmates6_2{ "yuan","yang","ping","yangzengxiao" };
+	//在合并之前需对元素进行排序
+	my_workmates6_1.sort();
+	my_workmates6_2.sort();
+	my_workmates6_1.merge(my_workmates6_2);
+
+
+	//有条件移除元素 remove_if
+	std::forward_list<int> my_num{ 1,2,3,4,5,6,7 };
+	//此处可以采用lambda函数
+	my_num.remove_if([](const int& num) { return num < 4; });    //小于4的元素将会被移除
+
+	//移除：也可以自定义函数
+	std::forward_list<int> my_num2{ 1,2,3,4,5,6,7 };
+	my_num2.remove_if(myRemove);		//小于4的元素将会被移除
 
 }
 
