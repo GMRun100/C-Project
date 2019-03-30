@@ -9,6 +9,8 @@
 #include <vector>
 #include <array>
 #include <deque>
+#include <list>
+#include <forward_list>
 #include <algorithm>
 #include <numeric>
 using namespace std;
@@ -17,7 +19,41 @@ using namespace std;
 #define new DEBUG_NEW
 #endif
 
+//重载operator
+class my_greater
+{
+public:
+	my_greater();
+	~my_greater();
 
+	bool operator() (std::string s1,std::string s2)
+	{
+		if(s1[0]==s2[0])
+		{
+			return s1.length() > s2.length();
+		}
+		else
+		{
+			return s1 > s2;
+		}
+	}
+
+private:
+
+};
+
+my_greater::my_greater()
+{
+}
+
+my_greater::~my_greater()
+{
+}
+
+bool myRemove(const int& num)
+{
+	return num < 4;
+}
 
 
 // 用于应用程序“关于”菜单项的 CAboutDlg 对话框
@@ -111,6 +147,8 @@ BOOL CmfcuseSTLcontainersDlg::OnInitDialog()
 	use_vector();
 	use_array();
 	use_deque();
+	use_list();
+	use_forward_list();
 
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
@@ -436,19 +474,314 @@ void CmfcuseSTLcontainersDlg::use_deque()
 
 
 	//deque添加和删除元素
-
+	//deque：添加元素
 	std::deque<int> numbers{ 2,3,4 };
 
 	numbers.push_front(11);
 	numbers.push_back(12);
 	auto first_number = numbers.front();   //返回第一个元素
+	//deque:删除元素
+	numbers.pop_front();
+	numbers.pop_back();
 
 	//deque插入元素
+	//insert用法与vector类似
+	auto iter=numbers.insert(std::end(numbers),13);  //返回指向插入元素的迭代器
 
+	iter = std::find(std::begin(numbers), std::end(numbers), 100);    //如果未查找到，返回的迭代器指向参数二所指向的元素的下一个元素
+	//iter--;
+	iter = std::find(std::begin(numbers), std::end(numbers), 2);   //指向查找到的第一个元素
+	iter=numbers.insert(iter,15);  //插入到所指向的元素的前面
 
+	//插入多个元素
+	//批量插入其他deque数组
+	std::deque<int> numbers_tmp{ 10,20,30 };
+	iter = numbers.insert(std::begin(numbers),std::begin(numbers_tmp), std::end(numbers_tmp));   //返回指向插入的第一个元素的迭代器
+	//利用初始化列表插入多个元素
+	iter = numbers.insert(iter, { 100,200,300 });
+
+	//替换元素
+	std::deque<std::string> words2{ "one","two","three","four" };
+	//auto init_list = { "seven","eight","nine" };   //这样写init_list的类型为char const*类型
+	auto init_list = { std::string{ "seven"},std::string{"eight"},std::string{"nine"} };
+	words2.assign(init_list);   //words中的元素被整体替换
+
+	//替换元素：直接通过初始化列表替换
+	words2.assign({ "11","12","13" });
+
+	//替换元素：通过迭代器替换
+	std::vector<std::string> wordset{ "this","that","these","those" };
+	words2.assign(std::begin(wordset) + 1, std::end(wordset));   //替换范围：参数一指向的元素，参数二指向的元素的前一个元素之间的元素
+
+	//替换元素：使用重复的对象
+	//参数一：替换的个数  参数二：替换的元素
+	words2.assign(8, "8");
+
+	//替换元素：通过重载赋值运算符
+	words2 = { "12","13","14" };
 
 
 	//如果不提前给deque分配好空间的话，deque的size是实时随着元素的增减而变化的
+}
+
+//list容器
+//list属于双向链表
+//优势：在序列已知的任何位置插入或删除元素
+//劣势：由于list属于链表，因此无法索引元素
+void CmfcuseSTLcontainersDlg::use_list()
+{
+	//创建list容器
+	//创建一个空list容器
+	std::list<std::string> words;
+
+	//创建具有给定数量的list容器
+	std::list<std::double_t> value(50,3.1415926);    //注意不能使用{50,3.1415926}，否则将仅包含两个元素
+
+	//创建：利用拷贝构造函数
+	std::list<double> values_copy{ value };     //相当于用value初始化values_copy
+
+	//创建：利用迭代器
+	std::list<double> samples {++std::begin(value),--std::end(value)};   //因为list的begin和end返回的是双向迭代器，因此无法用加减整数的办法移动迭代器，我觉得是无法判断迭代器的移动方向导致
+
+	//增加元素
+	std::list<std::string> names{ "benliu","guooujie","weiyongxin" };
+	names.push_front("yuanyuan");
+	names.push_back("yangzengxiao");
+
+	//插入元素
+	std::list<int> data(10, 55);
+
+	data.insert(++std::begin(data), 66);
+
+	//插入元素：在指定位置插入几个相同的元素
+	auto iter = std::begin(data);
+	//移动迭代器：不能直接使用+号或者－号
+	std::advance(iter, 9);  //从当前指向的位置移动9个元素
+	data.insert(iter, 3, 88);
+
+	//插入元素：将其他容器的元素插入到当前容器中
+	auto data_final = --(--std::end(data));
+
+	std::vector<int> numbers(10, 5);
+	data.insert(--(--std::end(data)), cbegin(numbers), cend(numbers));
+	//我们发现再插入完元素后指向list容器倒数第二个元素的迭代器并没有失效，应为倒数第二个元素并没有发生移动
+	//list 元素的迭代器只会在它所指向的元素被删除时才会失效
+
+	//在list容器中直接构造元素
+	std::list<std::string> names2{ "benliu","guooujie","weiyongxin" };
+	names2.emplace_back("yuan");
+	std::string tmp_name("zengxiao");
+	names2.emplace_back(std::move(tmp_name));    //std::move() 函数将 tmp_name 的右值引用传入 emplace_back() 函数。这个操作执行后，tmp_name 变为空，因为它的内容已经被移到 list 中
+	names2.emplace_front("hualong");
+	names2.emplace(++std::begin(names2), "huahua");
+
+	
+	//list删除元素
+	std::list<int> numbers2{ 2,5,2,3,6,7,8,2,9 };
+	//删除指定位置的元素
+	auto iter2=numbers2.erase(--(--std::end(numbers2)));    //删除倒数第二个元素,返回指向删除元素的后一个元素的指针
+
+	//删除两个迭代器指向之间的元素
+	iter2 = numbers2.erase(++(std::begin(numbers2)), --(std::end(numbers2)));  //只剩最后一个元素和第一个元素
+
+	//删除指定的元素
+	std::list<int> numbers3{ 2,5,2,3,6,7,8,2,9 };
+	numbers3.remove(2);
+
+	//其他容器没有remove成员函数
+	//deque删除指定的元素
+	std::deque<int> numbers3_deque{ 2,5,2,3,6,7,8,2,9 };
+	//std::remove返回一个迭代器，该迭代器指向未移去的最后一个元素的下一个位置
+	auto iter2_deque = std::remove(begin(numbers3_deque), end(numbers3_deque), 2);     //此时容器的大小并没有发生变化，被删除元素的位置会由后面的元素来顶替，
+	iter2_deque = numbers3_deque.erase(iter2_deque, end(numbers3_deque));      //将多余的元素删除
+
+	//remove_if:参数是一个 lambda 表达式，但也可以是一个函数对象。
+	std::list<int> numbers4{ 2,5,2,3,6,7,8,2,9 };
+	numbers4.remove_if([](int n) {return n % 2 == 0; });     
+
+
+	//移除连续的重复元素
+	std::list<std::string> words2{ "one","two","two" ,"two" ,"two" ,"three","two" ,"two" ,"four","four" };
+	words2.unique();   //这里移除的是连续的重复元素，并不是移除所有的重复元素
+	//list当中如果所指向的元素没有被删除，则其迭代器不会失效
+
+
+	//list排序
+	std::list<std::string> names3{ "benliu","guooujie","weiyongxin" };
+	//排序：sort()使用operator()函数来进行比较，great()函数重载了operator()成员函数
+	names3.sort(std::greater<std::string>());     //名字按降序进行排列
+
+	//排序:自定义类重载operator函数
+	std::list<std::string> names4{ "benliu","guooujie","weiyongxin" ,"yuan","yang","ping","yangzengxiao"};
+	names4.sort(my_greater());
+
+	//排序：使用lambda表达式
+	std::list<std::string> names5{ "benliu","guooujie","weiyongxin" ,"yuan","yang","ping","yangzengxiao" };
+	names5.sort([](const std::string s1, std::string s2)
+	{
+		if (s1[0] == s2[0])
+		{
+			return s1.length() > s2.length();
+		}
+		else
+		{
+			return s1 > s2;
+		}
+	});
+
+	//合并元素
+	//两个list都必须是升序排列
+	std::list<int> my_values{2,4,6,14 };
+	std::list<int> your_values{ -2,1,7,10 };
+	my_values.merge(your_values);    //执行完此条语句后your_values的size为0
+
+	//合并元素：提供合并的方法
+	std::list<std::string> my_workmates{"benliu","guooujie","weiyongxin" };
+	std::list<std::string> my_workmates2{ "yuan","yang","ping","yangzengxiao" };
+	auto comp_str = [](const std::string s1, const std::string s2) {return s1[0] < s2[0]; };
+	//排序之前先确保两个list已经按照相同的排序方式进行排序
+	my_workmates.sort(comp_str);
+	my_workmates2.sort(comp_str);
+	my_workmates.merge(my_workmates2, comp_str);
+
+
+	//拼接元素
+	//拼接某一元素
+	std::list<std::string> my_workmates3{ "benliu","guooujie","weiyongxin" };
+	std::list<std::string> my_workmates4{ "yuan","yang","ping","yangzengxiao" };
+
+	//splice() 的第一个参数是指向目的容器的迭代器。第二个参数是元素的来源。第三个参数是一个指向源list容器中被粘接元素的迭代器，它会被插入到第一个参数所指向位置之前
+	my_workmates3.splice(std::begin(my_workmates3), my_workmates4, ++std::begin(my_workmates4));   //此时my_workmates4将只剩下三个元素
+
+	//拼接一段元素
+	std::list<std::string> my_workmates5{ "benliu","guooujie","weiyongxin" };
+	std::list<std::string> my_workmates6{ "yuan","yang","ping","yangzengxiao" };
+	my_workmates5.splice(++std::begin(my_workmates5), my_workmates6, ++std::begin(my_workmates6), std::end(my_workmates6)); //此时my_workmates6将只剩下第一个元素
+
+	//拼接所有元素
+	std::list<std::string> my_workmates7{ "benliu","guooujie","weiyongxin" };
+	std::list<std::string> my_workmates8{ "yuan","yang","ping","yangzengxiao" };
+	my_workmates7.splice(std::begin(my_workmates7), my_workmates8);				//此时my_workmates8将为空
+
+	//访问list中的元素
+	//获取第一个元素
+	string my_first = my_workmates7.front();    //返回第一个元素的引用
+	auto my_end = my_workmates7.back();			//返回最后一个元素的引用
+	
+	//遍历所有元素,使用基于范围的循环
+	for (const auto& workmate : my_workmates7)
+	{
+		TRACE("my_workmates7:%s\n", workmate.c_str());
+	}
+
+	//使用迭代器遍历所有元素
+	for (auto my_iter = std::begin(my_workmates7); my_iter != std::end(my_workmates7); my_iter++)
+	{
+		TRACE("my_workmates7 from iter:%s\n", my_iter->c_str());    //因为iter属于广义指针，所以此处需用->获取元素
+	}
+	//另一个遍历获取所有元素的例子
+	list<int> sortlist;
+	sortlist.push_back(3);
+	sortlist.push_back(15);
+	sortlist.push_back(8);
+	sortlist.push_back(7);
+
+	for (auto sortlist_iter = std::begin(sortlist); sortlist_iter != std::end(sortlist); sortlist_iter++)
+	{
+		TRACE("sortlist from iter:%d\n", *sortlist_iter);
+	}
+}
+//forward_list属于单向链表
+//相比于list无法反向遍历元素，只能从头到尾遍历元素
+void CmfcuseSTLcontainersDlg::use_forward_list()
+{
+	//创建forward_list
+	std::forward_list<std::string> my_workmates{ "benliu","guooujie","weiyongxin", "yuan","yang","ping","yangzengxiao"};
+	//计算大小
+	auto count = std::distance(std::begin(my_workmates),std::end(my_workmates));   //count类型为int 大小为3
+
+	//获取forward_list指定位置的元素
+	auto iter = std::begin(my_workmates);
+	size_t m_ad{ 3 };
+	std::advance(iter, m_ad);
+	try
+	{
+		TRACE("the elem in my_workmates is %s\n", iter->c_str());   
+	}
+	catch (const std::exception& e)
+	{
+		TRACE("the error is %s\n", e.what());
+	}
+
+	//拼接元素
+	//拼接单个元素
+	std::forward_list<std::string> my_workmates2_1{ "benliu","guooujie","weiyongxin"};
+	std::forward_list<std::string> my_workmates2_2{ "yuan","yang","ping","yangzengxiao" };
+	//before_begin返回一个指向第一个元素之前位置的迭代器
+	auto iter2 = std::begin(my_workmates2_2);
+	iter2++;
+	//list的splice成员函数是插入到参数一所指向的元素之前，而forward_list的splice_after是插入到参数一所指向的元素之后
+	my_workmates2_1.splice_after(my_workmates2_1.before_begin(), my_workmates2_2,iter2);   //此处移动的是my_workmates2_2,iter2所指向的元素后面的元素
+
+	//拼接多个元素
+	std::forward_list<std::string> my_workmates2_3{ "benliu","guooujie","weiyongxin" };
+	std::forward_list<std::string> my_workmates2_4{ "yuan","yang","ping","yangzengxiao" };
+	//splice_after黏贴的范围是参数三所指向的元素的写一个元素开始，这与splice不同
+	my_workmates2_3.splice_after(my_workmates2_3.before_begin(), my_workmates2_4, ++std::begin(my_workmates2_4), std::end(my_workmates2_4));
+
+	//拼接另外一个容器
+	std::forward_list<std::string> my_workmates2_5{ "benliu","guooujie","weiyongxin" };
+	std::forward_list<std::string> my_workmates2_6{ "yuan","yang","ping","yangzengxiao" };
+
+	my_workmates2_5.splice_after(my_workmates2_5.before_begin(),my_workmates2_6);   //my_workmates2_6执行完后为空
+
+	//插入元素，insert
+	//插入单个元素
+	std::forward_list<std::string> my_workmates3_1{ "benliu","guooujie","weiyongxin" };
+	my_workmates3_1.insert_after(my_workmates3_1.before_begin(),"yuan");
+	
+	//插入多个元素
+	std::forward_list<std::string> my_workmates3_2{ "benliu","guooujie","weiyongxin" };
+	my_workmates3_2.insert_after(my_workmates3_2.before_begin(),3,"yuan");
+
+	//插入元素
+	//与splice_after的区别：splice_after会移除源容器中的元素，而insert_after仅仅是拷贝
+	std::forward_list<std::string> my_workmates3_3{ "benliu","guooujie","weiyongxin" };
+	std::forward_list<std::string> my_workmates3_4{ "yuan","yang","ping","yangzengxiao" };
+	my_workmates3_3.insert_after(my_workmates3_3.before_begin(),std::begin(my_workmates3_4),std::end(my_workmates3_4));
+
+	//排序，sort
+	std::forward_list<std::string> my_workmates4_1{ "benliu","guooujie","weiyongxin" };
+	//升序排列
+	my_workmates4_1.sort();
+	//降序排列
+	my_workmates4_1.sort(std::greater<std::string>());     //调用了greater模板
+
+	//排序也可以自定义函数，重载operator即可，具体用法可参考list
+
+	//移除连续重复元素，unique
+	//注意不连续的重复元素会分别处理
+	std::forward_list<std::string> my_workmates5_1{ "benliu","benliu","guooujie","guooujie","guooujie","weiyongxin","guooujie","guooujie","guooujie" };
+	my_workmates5_1.unique();
+
+	//合并元素 merge
+	std::forward_list<std::string> my_workmates6_1{ "benliu","guooujie","weiyongxin" };
+	std::forward_list<std::string> my_workmates6_2{ "yuan","yang","ping","yangzengxiao" };
+	//在合并之前需对元素进行排序
+	my_workmates6_1.sort();
+	my_workmates6_2.sort();
+	my_workmates6_1.merge(my_workmates6_2);
+
+
+	//有条件移除元素 remove_if
+	std::forward_list<int> my_num{ 1,2,3,4,5,6,7 };
+	//此处可以采用lambda函数
+	my_num.remove_if([](const int& num) { return num < 4; });    //小于4的元素将会被移除
+
+	//移除：也可以自定义函数
+	std::forward_list<int> my_num2{ 1,2,3,4,5,6,7 };
+	my_num2.remove_if(myRemove);		//小于4的元素将会被移除
+
 }
 
 
