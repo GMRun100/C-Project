@@ -160,10 +160,61 @@ void CmfcusemapDlg::use_map()
 {
 	//构造map容器
 	//在map容器中每种元素类型都为pair<const K，T> 类型的元素
-	std::map<std::string, size_t> people{ {"guooujie",22},{"benliu",35},{"yangzengxiao",25}};
+	//std::map<std::string, size_t> people{ {"guooujie",22},{"benliu",35},{"yangzengxiao",25}};
+	std::map<std::string, size_t> people{};
 
 	//构造map容器:可以利用make_pair函数将分别T1和T2对象组合成一个对象
-	char* tmp_pchr[] = { "yuanyuan" };
+	//char* tmp_pchr[] = { "yuanyuan" };
+	size_t tmp_size{ 19 };
+	auto m_tmp_pair = std::make_pair("yuanyuan", tmp_size);    //这里m_tmp_pair的类型为std::pair<char const *,unsigned int>
+
+	//插入元素
+	people.insert(m_tmp_pair);   //在执行插入操作时，会将对象的类型隐式转换为容器所需的类型
+
+	char  *tmp_pchr1 = {"guooujie"};    //此处不能写成char *[],char *[]表示字符数组
+	auto m_tmp_pair2 = std::make_pair(tmp_pchr1, 22); //std::pair<char *,int>
+	auto m_pr=people.insert(m_tmp_pair2);   //插入的时候会将22隐式转换为unsigned int,函数返回一个pair<iterator,bool> 对象
+	auto m_iter = m_pr.first;  //对象的成员 first 是一个迭代器，它要么指向插入元素，要么指向阻止插入的元素
+	auto ret = m_pr.second;   //成员变量 second (布尔型)是返回对象，如果插入成功，返回值为 true，否则为 false
+
+	//遍历map容器中的所有元素
+	//在map容器中元素是以键的升序排列的，因为 map 中默认使用 less<string> 函数对象对它们进行排序。
+	for (const auto& p : people)
+		TRACE("name:%s   age:%d\n", p.first.c_str(), p.second);
+
+	//插入重复元素
+	m_tmp_pair = std::make_pair("yuanyuan", 88);
+	m_pr = people.insert(m_tmp_pair);    //如果存在重复元素，m_pr的成员变量 first 指向 map 中已有的和键匹配的元素，成员变量 second 为 false，表明元素没有插入成功
+	//如果插入失败，说明元素重复
+	if (!m_pr.second)
+		m_pr.first->second = 88;   //修改重复元素的年龄
+	
+	//插入元素：利用pair构造函数生成的对象作为insert()的参数
+	people.insert(std::pair<const std::string, size_t>{"benliu", 48});   //在监视窗口中，benliu排在第一个，因为map默认按键值的升序进行排列
+
+	//插入元素：通过提示符来指定元素插入的位置
+	m_pr = people.insert(std::make_pair("lihualong",36));
+	//下一个 insert() 函数的第一个参数和上面的提示符有关，所以这里就是插入元素的地方。insert() 的第二个参数指定的新元素会被插入到提示符的前面，并尽可能地靠近它。如果提示符不能以这种方式使用，那么将忽略它
+	//这样做的好处是可以提高元素的插入速度
+	people.insert(m_pr.first, std::make_pair("huahua", 33));
+
+	//插入元素：在插入元素之前可以通过count函数来判断来判断map容器中是否存在该元素
+	size_t m_count = people.count("guooujie");   //m_count=1
+
+	//插入元素：直接赋值法
+	if (!people.count("tianchun"))
+	{
+		people[std::string("tianchun")] = 66;
+	}
+
+	//插入元素：insert参数为初始化列表
+	people.insert({ "zhangbo",10 });
+
+	
+
+
+
+
 
 
 }
