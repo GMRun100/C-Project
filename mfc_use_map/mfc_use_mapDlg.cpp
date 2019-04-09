@@ -156,6 +156,7 @@ HCURSOR CmfcusemapDlg::OnQueryDragIcon()
 }
 //学习map容器
 //map容器组织元素的方式为平衡二叉树
+//map<K，T> 中的每个元素都是同时封装了对象及其键的 pair<const K，T> 类型对象
 void CmfcusemapDlg::use_map()
 {
 	//构造map容器
@@ -210,10 +211,31 @@ void CmfcusemapDlg::use_map()
 	//插入元素：insert参数为初始化列表
 	people.insert({ "zhangbo",10 });
 
-	
+	//插入元素：insert参数为多个初始化列表
+	std::map<std::string, size_t> people2{{"guooujie",22},{"benliu",35},{"yangzengxiao",25}};
+	people2.insert({ {"zhengtianchun",10 },{ "luyanwei",10 } });
+
+	//插入元素：利用初始化列表插入元素
+	//新建一个初始化列表
+	//此处必须要加入const关键字，因为map中的每个元素都是pair<const K,T>类型对象
+	//如果不加const的话，initializer_list <string,size_t> 无法隐式转换为 initializer_list<const string, size_t>，所以前者类型的对象不能作为 insert() 函数的参数
+	std::initializer_list<std::pair<const std::string, size_t>> m_init{{"chenghua",12} ,{"luyu",11}};   
+	std::map<std::string, size_t> people2_2{{"guooujie",22},{"benliu",35},{"yangzengxiao",25}};
+	people2_2.insert(m_init);
+
+	//插入元素：将另一个容器中的元素插入
+	std::map<std::string, size_t> crowd{};
+
+	auto iter = std::begin(people);
+	std::advance(iter, 4);   //此时iter将指向第五个元素
+	crowd.insert(++std::begin(people),iter);   //插入people的第2,3,4个元素
 
 
-
+	//构造元素
+	//emplace和insert的区别可以参见https://www.cnblogs.com/narjaja/p/10039509.html文档，此处待后续学习
+	std::map<std::string, size_t> people3_1{ {"guooujie",22},{"benliu",35},{"yangzengxiao",25} };
+	auto iter3 = std::make_pair("benliu2", 12);
+	auto pr3=people3_1.emplace(iter3);      
 
 
 
