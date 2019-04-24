@@ -231,11 +231,28 @@ void CmfcusemapDlg::use_map()
 	crowd.insert(++std::begin(people),iter);   //插入people的第2,3,4个元素
 
 
-	//构造元素
+	//构造元素:emplace()函数，返回一个 pair<iterator,bool> 对象
 	//emplace和insert的区别可以参见https://www.cnblogs.com/narjaja/p/10039509.html文档，此处待后续学习
 	std::map<std::string, size_t> people3_1{ {"guooujie",22},{"benliu",35},{"yangzengxiao",25} };
 	auto iter3 = std::make_pair("benliu2", 12);
-	auto pr3=people3_1.emplace(iter3);      
+	auto pr3=people3_1.emplace(iter3);  
+
+	//构造元素：emplace_hint()函数
+	//返回值为迭代器:如果新元素被插入，它返回的是指向新元素的迭代器；如果没有插入，返回的是和这个键匹配的现有元素的迭代器，拥有相同的 key 值
+	std::map<std::string, size_t> people3_2{ {"guooujie",22},{"benliu",35},{"yangzengxiao",25} };
+	pr3 = people3_2.emplace("benliu2", 12);
+	auto m_count3 = people3_2.size();
+	//如果容器使用这个提示符，那么新元素会在这个指示符表示的位置之前生成，并尽可能靠近这个位置。提示符后面的参数用来构造新元素
+	auto iter3_2 = people3_2.emplace_hint(pr3.first,"yangzengxiao2",52);
+	//判断是否插入成功
+	if (m_count3 < people3_2.size())
+	{
+		TRACE("emplace_hint success!\d");
+	}
+
+	//获取元素
+
+
 
 
 
