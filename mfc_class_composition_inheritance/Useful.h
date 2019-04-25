@@ -8,7 +8,8 @@ class X
 {
 	int i;    //类成员没有使用任何访问修饰符，将假定类成员为私有成员
 public:
-	X() { i = 0; };
+	X() { i = 1; };
+	X(int x_i) { i = x_i; }
 	~X();
 	void set(int ii)
 	{ i = ii; }
@@ -19,9 +20,6 @@ private:
 
 };
 
-X::X()
-{
-}
 
 X::~X()
 {

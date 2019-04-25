@@ -6,6 +6,10 @@
 #include "mfc_class_composition_inheritance.h"
 #include "mfc_class_composition_inheritanceDlg.h"
 #include "afxdialogex.h"
+#include "Composition.h"
+#include "inheritance.h"
+#include "InheritanceAndComposition.h"
+#include "order.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -99,6 +103,33 @@ BOOL CmfcclasscompositioninheritanceDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// 设置小图标
 
 	// TODO: 在此添加额外的初始化代码
+
+
+	//simple practice class' composition
+	Y y;
+	y.f(55);
+	y.permute();
+
+	//simple practice class inheritance
+	//view the memory size of the class
+	// the size of the memory occupied by the class is determined by the member variables
+	size_t s_x = sizeof(X);     //X has variable int x, so X occupies 4 bytes  
+	size_t s_y2 = sizeof(Y2);   //Y occupies 8 bytes. Y contains all data members and member functions of X
+
+	Y2 m_y2;    //this will call construct function of Y2 and X
+	m_y2.set(45);
+	int r_y2=m_y2.read();    //here will call the member function of the base class
+	r_y2=m_y2.change();
+
+
+	//practice composition and inheritance
+	//C is inherited from B,C has every member of B,just like C has a member of B. 
+	C *c=new C(55);
+	delete c;
+
+	//
+	Derived2 *d2=new Derived2(3);
+	delete d2;
 
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }

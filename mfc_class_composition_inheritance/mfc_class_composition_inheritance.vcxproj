@@ -76,6 +76,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
+    <OutDir>$(SolutionDir)bin\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)temp\compile\$(ProjectName)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
@@ -183,15 +185,19 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Composition.h" />
+    <ClInclude Include="inheritance.h" />
+    <ClInclude Include="InheritanceAndComposition.h" />
     <ClInclude Include="mfc_class_composition_inheritance.h" />
     <ClInclude Include="mfc_class_composition_inheritanceDlg.h" />
+    <ClInclude Include="Order.h" />
+    <ClInclude Include="order2.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="Useful.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Composition.cpp" />
     <ClCompile Include="mfc_class_composition_inheritance.cpp" />
     <ClCompile Include="mfc_class_composition_inheritanceDlg.cpp" />
     <ClCompile Include="stdafx.cpp">
