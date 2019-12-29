@@ -1,0 +1,3 @@
+LIBRARY "DO_DLL"
+EXPORTS
+Add @1
