@@ -3,6 +3,7 @@
 
 #include <iostream>
 using namespace std;
+#include<atlstr.h>
 
 struct A
 {
@@ -25,5 +26,12 @@ int main()
 
 	//输出表达式类型
 	cout << typeid(1.234*456).name() << endl;
+
+
+	CString  str3;
+	const char* msg = "ccc;ALL";
+	str3.Format("%s",msg);
+
+
 
 }
