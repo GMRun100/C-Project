@@ -1,0 +1,9 @@
+LIBRARY
+
+EXPORTS 
+
+;给函数指定别名或定义序号
+fun666=fun   @12 
+Min   @1   
+Max	  @5    
+
