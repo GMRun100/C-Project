@@ -4,7 +4,7 @@
 //利用.def文件导出
 int fun()
 {
-	return 0;
+	return 1000;
 }
 
 int Min(int a, int b)
