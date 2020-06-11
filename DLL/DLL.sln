@@ -31,6 +31,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DLL009_dllexport_class", "s
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DLL009_test009", "src\DLL009_test009\DLL009_test009.vcxproj", "{417C7A5B-B828-4754-89C1-AEA1216B17A4}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DLL010_dllmain", "src\DLL010_dllmain\DLL010_dllmain.vcxproj", "{F317E3FA-01FA-4B68-927B-A454774E382A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -151,6 +153,14 @@ Global
 		{417C7A5B-B828-4754-89C1-AEA1216B17A4}.Release|x64.Build.0 = Release|x64
 		{417C7A5B-B828-4754-89C1-AEA1216B17A4}.Release|x86.ActiveCfg = Release|Win32
 		{417C7A5B-B828-4754-89C1-AEA1216B17A4}.Release|x86.Build.0 = Release|Win32
+		{F317E3FA-01FA-4B68-927B-A454774E382A}.Debug|x64.ActiveCfg = Debug|x64
+		{F317E3FA-01FA-4B68-927B-A454774E382A}.Debug|x64.Build.0 = Debug|x64
+		{F317E3FA-01FA-4B68-927B-A454774E382A}.Debug|x86.ActiveCfg = Debug|Win32
+		{F317E3FA-01FA-4B68-927B-A454774E382A}.Debug|x86.Build.0 = Debug|Win32
+		{F317E3FA-01FA-4B68-927B-A454774E382A}.Release|x64.ActiveCfg = Release|x64
+		{F317E3FA-01FA-4B68-927B-A454774E382A}.Release|x64.Build.0 = Release|x64
+		{F317E3FA-01FA-4B68-927B-A454774E382A}.Release|x86.ActiveCfg = Release|Win32
+		{F317E3FA-01FA-4B68-927B-A454774E382A}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

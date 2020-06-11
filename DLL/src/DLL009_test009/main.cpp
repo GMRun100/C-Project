@@ -5,8 +5,13 @@ using namespace std;
 
 int main()
 {
-	Stu s(666);
-	s.Print();
+	//Stu s(666);
+	//s.Print();
+
+	IAnimal* pCat = GetCat();
+	pCat->eat();
+	pCat->sleep();
+	DelCat(pCat);
 
 	return 0;
 }
